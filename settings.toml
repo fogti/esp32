@@ -1,0 +1,4 @@
+profile = "minimal"
+version = "12"
+
+[overrides]

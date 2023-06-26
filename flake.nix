@@ -42,12 +42,15 @@
       installPhase = ''
         mkdir -p $out
         for i in $(< layers); do
-          tar -C $out -xvf "$i" home/esp/.cargo home/esp/.rustup || true
+          tar -C $out -xvf "$i" home/esp/{.cargo,.rustup,export-esp.sh} || true
         done
-        mv -t $out $out/home/esp/{.cargo,.rustup}
+        mv -t $out $out/home/esp/{.cargo,.rustup,export-esp.sh}
         rmdir $out/home/esp
         rmdir $out/home
-        # [ -d $out/.cargo ] && [ -d $out/.rustup ]
+        rm -rf $out/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu
+        rm -rf $out/.rustup/{downloads,tmp,update-hashes}
+        cp -t $out/.rustup ${./settings.toml}
+        substituteInPlace $out/export-esp.sh --replace /home/esp/ $out/
       '';
     };
   };
